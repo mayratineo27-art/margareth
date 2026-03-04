@@ -49,16 +49,23 @@
 }
 
 .glass-card {
-  @apply bg-white/60 backdrop-blur-3xl border border-white/80 shadow-[0_20px_40px_rgba(0, 0, 0, 0.05)] rounded-[3rem];
+  @apply bg-white/60 backdrop-blur-3xl border border-white/80 rounded-[3rem];
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
   transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .glass-card:hover {
-  @apply bg-white/50 border-white/60 -translate-y-1 shadow-[0_12px_48px_0_rgba(31, 38, 135, 0.2)];
+  @apply bg-white/50 border-white/60 -translate-y-1;
+  box-shadow: 0 12px 48px 0 rgba(31, 38, 135, 0.2);
 }
 
 .btn-primary {
-  @apply px-10 py-5 bg-gradient-to-br from-accent-600 to-indigo-700 text-white rounded-full font-bold shadow-[0_10px_20px_-5px_rgba(79, 70, 229, 0.4)] hover:shadow-[0_15px_30px_-5px_rgba(79, 70, 229, 0.5)] hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center gap-2;
+  @apply px-10 py-5 bg-gradient-to-br from-accent-600 to-indigo-700 text-white rounded-full font-bold hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center gap-2;
+  box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 15px 30px -5px rgba(79, 70, 229, 0.5);
 }
 
 .emotion-btn {
