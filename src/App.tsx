@@ -33,6 +33,7 @@ import { SecretBox } from './components/SecretBox';
 import { MagicMirror } from './components/MagicMirror';
 import { ConflictGame } from './components/ConflictGame';
 import { MotivationalCards } from './components/MotivationalCards';
+import { MascotRun } from './components/MascotRun';
 import { getDailyAdvice, analyzeEmotion, speakMessage, generateConflictScenario, evaluateConflictChoice } from './services/groqService';
 
 export default function App() {
@@ -47,6 +48,7 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [activeGame, setActiveGame] = useState<'bubbles' | 'secret' | 'mirror' | 'conflict' | null>(null);
   const [stickers, setStickers] = useState<string[]>([]);
+  const [isOffline, setIsOffline] = useState(!window.navigator.onLine);
 
   const playSound = (type: 'pop' | 'success' | 'click' | 'magic') => {
     const sounds = {
@@ -80,6 +82,17 @@ export default function App() {
       setTimeout(() => handleSpeak("¡Hola! Soy Margareth. " + advice), 1000);
     };
     fetchAdvice();
+
+    const handleOffline = () => setIsOffline(true);
+    const handleOnline = () => setIsOffline(false);
+
+    window.addEventListener('offline', handleOffline);
+    window.addEventListener('online', handleOnline);
+
+    return () => {
+      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener('online', handleOnline);
+    };
   }, []);
 
   // Contextual Guidance & Audio Instructions
@@ -683,6 +696,30 @@ export default function App() {
           )}
         </AnimatePresence>
       </main>
+
+      <AnimatePresence>
+        {isOffline && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-indigo-950/20 backdrop-blur-3xl flex items-center justify-center p-6"
+          >
+            <div className="w-full max-w-4xl flex flex-col items-center gap-8">
+              <motion.div
+                initial={{ y: -20 }}
+                animate={{ y: 0 }}
+                className="bg-white px-8 py-4 rounded-full shadow-2xl flex items-center gap-4 border-2 border-indigo-100"
+              >
+                <div className="w-4 h-4 bg-red-500 rounded-full animate-pulse" />
+                <h2 className="text-2xl font-black text-indigo-900 font-hand">¡Oh! Se fue el internet... ¡Pero Margareth sigue aquí!</h2>
+              </motion.div>
+              <MascotRun />
+              <p className="text-white/60 font-bold">Volverás automáticamente cuando regrese la conexión</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Footer Decoration */}
       <footer className="mt-12 w-full flex justify-center gap-12 opacity-30">
