@@ -83,7 +83,7 @@ export const generateConflictScenario = async () => {
             messages: [
                 {
                     role: "system",
-                    content: "Genera una situación de conflicto común en un jardín infantil (niños de 4-6 años). Retorna un JSON estrictamente válido con: situation (string), question (string), y options (un array de 3 objetos { id, text, type } donde type es 'positive', 'negative' o 'neutral')."
+                    content: "Genera una situación de conflicto social para niños de 4-6 años. Varía los temas: compartir, esperar turno, desacuerdos al jugar, inclusión (invitar a alguien a jugar), o sentimientos heridos. Usa un lenguaje muy sencillo y tierno. Retorna un JSON estrictamente válido con: situation (string corto), question (string), y options (array de 3 { id, text, type } donde type es 'positive', 'negative' o 'neutral')."
                 }
             ],
             model: "llama-3.3-70b-versatile",
@@ -92,15 +92,36 @@ export const generateConflictScenario = async () => {
         return JSON.parse(response.choices[0]?.message?.content || "{}");
     } catch (error) {
         console.error("Error Groq Conflict:", error);
-        return {
-            situation: "Un niño te quitó tu juguete favorito.",
-            question: "¿Qué harías tú?",
-            options: [
-                { id: "1", text: "Pedirle que me lo devuelva por favor", type: "positive" },
-                { id: "2", text: "Empujarlo para recuperarlo", type: "negative" },
-                { id: "3", text: "Ir a buscar a la maestra", type: "positive" }
-            ]
-        };
+        const backups = [
+            {
+                situation: "Tu amigo tiene un juguete que tú también quieres usar ahora mismo.",
+                question: "¿Qué podemos hacer?",
+                options: [
+                    { id: "1", text: "Esperar mi turno y jugar con otra cosa mientras", type: "positive" },
+                    { id: "2", text: "Quitarle el juguete rápido", type: "negative" },
+                    { id: "3", text: "Preguntar si podemos jugar los dos juntos", type: "positive" }
+                ]
+            },
+            {
+                situation: "Ves a una niña sentada solita mientras todos los demás juegan.",
+                question: "¿Qué sería lo más amable?",
+                options: [
+                    { id: "1", text: "Seguir jugando como si nada", type: "neutral" },
+                    { id: "2", text: "Invitarla a jugar con nosotros", type: "positive" },
+                    { id: "3", text: "Decirle que no puede jugar", type: "negative" }
+                ]
+            },
+            {
+                situation: "Estás haciendo una torre y alguien la tumba sin querer.",
+                question: "¿Cómo reaccionamos?",
+                options: [
+                    { id: "1", text: "Enojarme y gritar muy fuerte", type: "negative" },
+                    { id: "2", text: "Decir 'no pasa nada' y armarla de nuevo", type: "positive" },
+                    { id: "3", text: "Pedirle que me ayude a reconstruirla", type: "positive" }
+                ]
+            }
+        ];
+        return backups[Math.floor(Math.random() * backups.length)];
     }
 };
 
