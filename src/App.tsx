@@ -32,6 +32,7 @@ import { BubbleGame } from './components/BubbleGame';
 import { SecretBox } from './components/SecretBox';
 import { MagicMirror } from './components/MagicMirror';
 import { ConflictGame } from './components/ConflictGame';
+import { MotivationalCards } from './components/MotivationalCards';
 import { getDailyAdvice, analyzeEmotion, speakMessage, generateConflictScenario, evaluateConflictChoice } from './services/groqService';
 
 export default function App() {
@@ -226,9 +227,38 @@ export default function App() {
               exit={{ opacity: 0, y: -20 }}
               className="w-full flex flex-col items-center gap-8"
             >
-              <Mascot message={mascotMessage} emotion={diaryEntries[0]?.emotionId} />
+              <Mascot
+                message={mascotMessage}
+                emotion={diaryEntries[0]?.emotionId || 'happy'}
+                onInteract={() => {
+                  const phrases = [
+                    "¡Me encanta jugar contigo! ✨",
+                    "Eres una persona muy especial. 💖",
+                    "¡Qué alegría verte de nuevo! 🌈",
+                    "¿Hacemos algo mágico hoy? 🪄",
+                    "Tu corazón brilla mucho. 🌟"
+                  ];
+                  const random = phrases[Math.floor(Math.random() * phrases.length)];
+                  setMascotMessage(random);
+                  handleSpeak(random);
+                  playSound('magic');
+                }}
+              />
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+              {/* Quick Breathe Button */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => { playSound('click'); setView('games'); setActiveGame('bubbles'); }}
+                className="w-full flex items-center justify-center gap-3 p-6 bg-gradient-to-r from-blue-400 to-indigo-500 text-white rounded-[2rem] shadow-xl font-bold text-xl group"
+              >
+                <div className="bg-white/20 p-2 rounded-full group-hover:rotate-12 transition-transform">
+                  <Sparkles />
+                </div>
+                ¡Necesito un momento de calma! (Respirar)
+              </motion.button>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
                 <button
                   onClick={() => { playSound('click'); setView('diary'); }}
                   className="glass-card p-8 flex flex-col items-center gap-4 hover:scale-105 transition-transform group"
@@ -260,12 +290,44 @@ export default function App() {
                 </button>
               </div>
 
+              {/* Motivational Cards Section */}
+              <div className="w-full flex flex-col gap-4">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="text-yellow-500" />
+                  <h3 className="text-2xl font-black text-indigo-900 font-hand">Tarjetas Mágicas</h3>
+                </div>
+                <MotivationalCards />
+              </div>
+
+              {/* Weekly Mood Summary */}
+              {diaryEntries.length > 0 && (
+                <div className="w-full glass-card p-6 flex flex-col gap-4 overflow-hidden">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-bold text-indigo-950 font-hand text-xl">¿Cómo has estado últimamente?</h3>
+                    <span className="text-xs bg-indigo-100 text-indigo-600 px-3 py-1 rounded-full font-bold">Últimos 5 días</span>
+                  </div>
+                  <div className="flex gap-2 overflow-x-auto pb-2">
+                    {diaryEntries.slice(0, 5).map((entry) => {
+                      const emotion = EMOTIONS.find(e => e.id === entry.emotionId);
+                      return (
+                        <div key={entry.id} className={`flex-shrink-0 w-16 h-20 ${emotion?.bg} rounded-2xl flex flex-col items-center justify-center gap-1 border border-white/40`}>
+                          {emotion && <emotion.icon size={24} color={emotion.color} />}
+                          <span className="text-[10px] font-bold text-slate-500">
+                            {new Date(entry.timestamp).toLocaleDateString(undefined, { weekday: 'short' })}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
               {/* Daily Advice Banner */}
-              <div className="w-full bg-indigo-50 p-6 rounded-3xl border-2 border-indigo-100 flex items-center gap-4">
-                <div className="bg-white p-3 rounded-2xl shadow-sm text-indigo-500">
+              <div className="w-full bg-indigo-50 p-6 rounded-[2.5rem] border-2 border-indigo-100 flex items-center gap-4">
+                <div className="bg-white p-4 rounded-2xl shadow-sm text-indigo-500">
                   <Sparkles />
                 </div>
-                <p className="font-medium text-indigo-800 italic">"{dailyAdvice}"</p>
+                <p className="font-medium text-indigo-800 italic text-lg leading-snug">"{dailyAdvice}"</p>
               </div>
             </motion.div>
           )}
