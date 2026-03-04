@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Patrick+Hand&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-hand: "Patrick Hand", cursive;
+  
+  --color-soft-pink: #FFD1DC;
+  --color-soft-blue: #BDE0FE;
+  --color-soft-green: #CAFFBF;
+  --color-soft-yellow: #FDFFB6;
+  --color-soft-purple: #A2D2FF;
+  --color-warm-orange: #FFC8A2;
+  
+  --color-accent-600: #6366f1;
+  --color-accent-700: #4f46e5;
+}
+
+@layer base {
+  body {
+    @apply text-slate-800 font-sans overflow-x-hidden min-h-screen relative;
+    background: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%),
+                #f8fafc;
+    background-attachment: fixed;
+  }
+}
+
+.premium-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  opacity: 0.4;
+  filter: blur(100px);
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+}
+
+.font-hand {
+  font-family: var(--font-hand);
+}
+
+.glass-card {
+  @apply bg-white/40 backdrop-blur-2xl border border-white/40 shadow-[0_8px_32px_0_rgba(31,38,135,0.15)] rounded-[2.5rem];
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.glass-card:hover {
+  @apply bg-white/50 border-white/60 -translate-y-1 shadow-[0_12px_48px_0_rgba(31,38,135,0.2)];
+}
+
+.btn-primary {
+  @apply px-10 py-5 bg-gradient-to-br from-accent-600 to-indigo-700 text-white rounded-full font-bold shadow-[0_10px_20px_-5px_rgba(79,70,229,0.4)] hover:shadow-[0_15px_30px_-5px_rgba(79,70,229,0.5)] hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center gap-2;
+}
+
+.emotion-btn {
+  @apply flex flex-col items-center justify-center p-8 rounded-[2.5rem] transition-all hover:scale-110 active:scale-95 shadow-lg border-2 border-transparent hover:border-white/50;
+  background-clip: padding-box;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(2deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
+
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-900 via-indigo-700 to-purple-800;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-indigo-200/50 rounded-full hover:bg-indigo-300;
+}

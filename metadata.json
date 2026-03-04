@@ -1,0 +1,5 @@
+{
+  "name": "MARGARETH",
+  "description": "Sistema web emocional interactivo para niños de jardín infantil, centrado en la regulación emocional mediante el juego y el autoconocimiento.",
+  "requestFramePermissions": ["microphone", "camera"]
+}
