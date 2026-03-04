@@ -140,19 +140,3 @@ export const Mascot: React.FC<{ message?: string; emotion?: string; interactive?
     </div>
   );
 };
-
-{
-  message && (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.8, y: 10 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      className="relative bg-white/80 backdrop-blur-xl p-6 rounded-[2rem] shadow-xl border border-white/50 max-w-sm text-center font-bold text-indigo-950 font-hand text-2xl leading-relaxed"
-    >
-      <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-6 bg-white/80 border-t border-l border-white/50 rotate-45" />
-      {message}
-    </motion.div>
-  )
-}
-    </div >
-  );
-};
