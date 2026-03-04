@@ -20,7 +20,8 @@ import {
   Award,
   BarChart3,
   UserCircle,
-  Users
+  Users,
+  Zap
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
