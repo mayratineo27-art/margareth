@@ -48,6 +48,10 @@ export const ConflictGame: React.FC<ConflictGameProps> = ({ onComplete, onSpeak 
     if (isEvaluating) return;
     setSelectedId(option.id);
     setIsEvaluating(true);
+
+    // Smooth transition message
+    onSpeak("¡Qué buena elección! Deja que Margareth piense un poquito...");
+
     const fb = await evaluateConflictChoice(scenario!.situation, option.text);
     setFeedback(fb);
     setIsEvaluating(false);
@@ -101,8 +105,8 @@ export const ConflictGame: React.FC<ConflictGameProps> = ({ onComplete, onSpeak 
                   onClick={() => handleChoice(option)}
                   disabled={isEvaluating}
                   className={`glass-card p-4 flex items-center gap-4 transition-all text-left group border-2 ${selectedId === option.id
-                      ? 'border-indigo-500 bg-indigo-50'
-                      : 'border-transparent hover:bg-indigo-50'
+                    ? 'border-indigo-500 bg-indigo-50'
+                    : 'border-transparent hover:bg-indigo-50'
                     }`}
                 >
                   <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center group-hover:scale-110 transition-transform">
