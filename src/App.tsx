@@ -46,7 +46,7 @@ export default function App() {
   const [dailyAdvice, setDailyAdvice] = useState<string>("¡Hola! Soy Margareth, tu amiga emocional.");
   const [mascotMessage, setMascotMessage] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  const [activeGame, setActiveGame] = useState<'bubbles' | 'secret' | 'mirror' | 'conflict' | null>(null);
+  const [activeGame, setActiveGame] = useState<'bubbles' | 'secret' | 'mirror' | 'conflict' | 'run' | null>(null);
   const [stickers, setStickers] = useState<string[]>([]);
   const [isOffline, setIsOffline] = useState(!window.navigator.onLine);
 
@@ -548,6 +548,19 @@ export default function App() {
                       <p className="text-slate-500">Aprende a resolver problemas con tus amigos.</p>
                     </div>
                   </button>
+
+                  <button
+                    onClick={() => { playSound('click'); setActiveGame('run'); }}
+                    className="glass-card p-8 flex flex-col items-center gap-6 hover:bg-indigo-50 transition-colors"
+                  >
+                    <div className="w-24 h-24 bg-soft-green rounded-full flex items-center justify-center text-green-600 shadow-inner">
+                      <Gamepad2 size={48} />
+                    </div>
+                    <div className="text-center">
+                      <h3 className="text-2xl font-bold mb-2">Margareth Run</h3>
+                      <p className="text-slate-500">¡Corre y salta en una aventura mágica!</p>
+                    </div>
+                  </button>
                 </div>
               ) : (
                 <div className="glass-card relative overflow-hidden min-h-[500px]">
@@ -561,6 +574,7 @@ export default function App() {
                   {activeGame === 'secret' && <SecretBox onComplete={() => handleGameComplete('secret')} />}
                   {activeGame === 'mirror' && <MagicMirror emotionColor="#FFD700" onComplete={() => handleGameComplete('mirror')} />}
                   {activeGame === 'conflict' && <ConflictGame onSpeak={handleSpeak} onComplete={() => handleGameComplete('conflict')} />}
+                  {activeGame === 'run' && <MascotRun />}
                 </div>
               )}
             </motion.div>
