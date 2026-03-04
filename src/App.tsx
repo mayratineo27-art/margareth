@@ -258,6 +258,30 @@ export default function App() {
                 }}
               />
 
+              {/* Margareth Run Direct Access */}
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => { playSound('click'); setView('games'); setActiveGame('run'); }}
+                className="w-full relative overflow-hidden bg-gradient-to-br from-green-400 to-emerald-600 p-8 rounded-[3rem] shadow-2xl flex items-center justify-between text-white group"
+              >
+                <div className="flex flex-col items-start gap-2 z-10 text-left">
+                  <div className="bg-white/20 px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest flex items-center gap-2">
+                    <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                    ¡Nuevo Juego!
+                  </div>
+                  <h3 className="text-4xl font-black font-hand">Margareth Run</h3>
+                  <p className="text-emerald-50 font-bold max-w-[200px]">¿Cuánto puedes correr sin chocar?</p>
+                </div>
+                <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-20 group-hover:opacity-40 transition-opacity">
+                  <Gamepad2 size={160} className="translate-x-10 translate-y-10 -rotate-12" />
+                </div>
+                <div className="z-10 bg-white text-emerald-600 px-8 py-4 rounded-full font-black text-xl shadow-lg border-4 border-emerald-100 flex items-center gap-2">
+                  <Zap size={24} className="text-yellow-400 fill-yellow-400" />
+                  Jugar Ahora
+                </div>
+              </motion.button>
+
               {/* Quick Breathe Button */}
               <motion.button
                 whileHover={{ scale: 1.05 }}
