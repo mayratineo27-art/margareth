@@ -1,8 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Trophy, RotateCcw, Zap } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Sparkles, Trophy, RotateCcw, Zap, Gamepad2 } from 'lucide-react';
+import { MascotCustomization } from './Mascot';
 
-export const MascotRun: React.FC = () => {
+export const MascotRun: React.FC<{ customization?: MascotCustomization }> = ({
+    customization = { color: '#A78BFA', accessory: 'none' }
+}) => {
+    const mainColor = customization.color;
+    const darkColor = '#4C1D95';
+
     const [gameState, setGameState] = useState<'start' | 'playing' | 'gameover'>('start');
     const [score, setScore] = useState(0);
     const [highScore, setHighScore] = useState(0);
@@ -143,11 +149,6 @@ export const MascotRun: React.FC = () => {
                 </div>
             </div>
 
-            {/* Offline Message */}
-            <div className="absolute top-6 left-8 flex items-center gap-3 bg-red-50 px-4 py-2 rounded-full border border-red-100 z-20">
-                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                <span className="text-red-700 font-bold text-sm">Modo Desconectado</span>
-            </div>
 
             {/* Ground */}
             <div className="absolute bottom-0 w-full h-1/4 bg-slate-100 border-t-4 border-slate-200" />
@@ -165,18 +166,51 @@ export const MascotRun: React.FC = () => {
                 <svg viewBox="0 0 200 200" className="w-[80px] h-[80px] drop-shadow-lg">
                     <defs>
                         <linearGradient id="gameGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" style={{ stopColor: '#A78BFA', stopOpacity: 1 }} />
-                            <stop offset="100%" style={{ stopColor: '#7C3AED', stopOpacity: 1 }} />
+                            <stop offset="0%" style={{ stopColor: mainColor, stopOpacity: 1 }} />
+                            <stop offset="100%" style={{ stopColor: mainColor, stopOpacity: 0.8 }} />
                         </linearGradient>
                     </defs>
-                    <rect x="45" y="60" width="110" height="110" rx="55" fill="url(#gameGrad)" stroke="#4C1D95" strokeWidth="8" />
+                    <rect x="45" y="60" width="110" height="110" rx="55" fill="url(#gameGrad)" stroke={darkColor} strokeWidth="8" />
+
+                    {/* Character Face */}
                     <circle cx="75" cy="110" r="14" fill="white" />
                     <circle cx="125" cy="110" r="14" fill="white" />
                     <circle cx="75" cy="110" r="8" fill="#1E293B" />
                     <circle cx="125" cy="110" r="8" fill="#1E293B" />
                     <circle cx="100" cy="130" r="35" fill="white" opacity="0.2" />
-                    <path d="M 60 40 Q 40 0 80 20 L 90 70 Z" fill="#8B5CF6" stroke="#4C1D95" strokeWidth="4" />
-                    <path d="M 140 40 Q 160 0 120 20 L 110 70 Z" fill="#8B5CF6" stroke="#4C1D95" strokeWidth="4" />
+
+                    {/* Ears */}
+                    <path d="M 60 40 Q 40 0 80 20 L 90 70 Z" fill={mainColor} stroke={darkColor} strokeWidth="4" />
+                    <path d="M 140 40 Q 160 0 120 20 L 110 70 Z" fill={mainColor} stroke={darkColor} strokeWidth="4" />
+
+                    {/* Accessories in Game */}
+                    {customization.accessory === 'glasses' && (
+                        <g stroke={darkColor} strokeWidth="4" fill="none">
+                            <circle cx="75" cy="110" r="18" stroke="#1E293B" />
+                            <circle cx="125" cy="110" r="18" stroke="#1E293B" />
+                            <path d="M 93 110 L 107 110" stroke="#1E293B" />
+                        </g>
+                    )}
+
+                    {customization.accessory === 'hat' && (
+                        <g transform="translate(100, 60)">
+                            <path d="M -40 0 Q 0 -60 40 0 Z" fill="#EF4444" stroke={darkColor} strokeWidth="4" />
+                            <rect x="-50" y="-5" width="100" height="10" rx="5" fill="#EF4444" stroke={darkColor} strokeWidth="4" />
+                        </g>
+                    )}
+
+                    {customization.accessory === 'bow' && (
+                        <g transform="translate(140, 50) rotate(-20)">
+                            <path d="M -15 -10 L 15 10 L 15 -10 L -15 10 Z" fill="#F472B6" stroke={darkColor} strokeWidth="4" />
+                            <circle cx="0" cy="0" r="5" fill="#F472B6" stroke={darkColor} strokeWidth="4" />
+                        </g>
+                    )}
+
+                    {customization.accessory === 'crown' && (
+                        <g transform="translate(100, 55)">
+                            <path d="M -30 0 L -40 -30 L -15 -15 L 0 -40 L 15 -15 L 40 -30 L 30 0 Z" fill="#FBBF24" stroke={darkColor} strokeWidth="4" />
+                        </g>
+                    )}
                 </svg>
             </motion.div>
 

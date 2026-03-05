@@ -21,12 +21,14 @@ import {
   BarChart3,
   UserCircle,
   Users,
-  Zap
+  Zap,
+  Palette
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { EMOTIONS, DiaryEntry, Emotion } from './types';
-import { Mascot } from './components/Mascot';
+import { Mascot, MascotCustomization } from './components/Mascot';
+import { MascotCustomizer } from './components/MascotCustomizer';
 import { DrawingCanvas } from './components/DrawingCanvas';
 import { GrowthTree } from './components/GrowthTree';
 import { BubbleGame } from './components/BubbleGame';
@@ -38,7 +40,7 @@ import { MascotRun } from './components/MascotRun';
 import { getDailyAdvice, analyzeEmotion, speakMessage, generateConflictScenario, evaluateConflictChoice } from './services/groqService';
 
 export default function App() {
-  const [view, setView] = useState<'home' | 'diary' | 'games' | 'tree' | 'stickers' | 'teacher'>('home');
+  const [view, setView] = useState<'home' | 'diary' | 'games' | 'tree' | 'stickers' | 'teacher' | 'customizer'>('home');
   const [diarySubView, setDiarySubView] = useState<'new' | 'history'>('new');
   const [selectedEmotion, setSelectedEmotion] = useState<Emotion | null>(null);
   const [drawing, setDrawing] = useState<string>("");
@@ -50,6 +52,14 @@ export default function App() {
   const [activeGame, setActiveGame] = useState<'bubbles' | 'secret' | 'mirror' | 'conflict' | 'run' | null>(null);
   const [stickers, setStickers] = useState<string[]>([]);
   const [isOffline, setIsOffline] = useState(!window.navigator.onLine);
+  const [customization, setCustomization] = useState<MascotCustomization>(() => {
+    const saved = localStorage.getItem('margareth_customization');
+    return saved ? JSON.parse(saved) : { color: '#A78BFA', accessory: 'none' };
+  });
+
+  useEffect(() => {
+    localStorage.setItem('margareth_customization', JSON.stringify(customization));
+  }, [customization]);
 
   const playSound = (type: 'pop' | 'success' | 'click' | 'magic') => {
     const sounds = {
@@ -241,45 +251,61 @@ export default function App() {
               exit={{ opacity: 0, y: -20 }}
               className="w-full flex flex-col items-center gap-8"
             >
-              <Mascot
-                message={mascotMessage}
-                emotion={diaryEntries[0]?.emotionId || 'happy'}
-                onInteract={() => {
-                  const phrases = [
-                    "¡Me encanta jugar contigo! ✨",
-                    "Eres una persona muy especial. 💖",
-                    "¡Qué alegría verte de nuevo! 🌈",
-                    "¿Hacemos algo mágico hoy? 🪄",
-                    "Tu corazón brilla mucho. 🌟"
-                  ];
-                  const random = phrases[Math.floor(Math.random() * phrases.length)];
-                  setMascotMessage(random);
-                  handleSpeak(random);
-                  playSound('magic');
-                }}
-              />
+              <div className="relative group">
+                <Mascot
+                  message={mascotMessage}
+                  emotion={diaryEntries[0]?.emotionId || 'happy'}
+                  customization={customization}
+                  onInteract={() => {
+                    const phrases = [
+                      "¡Me encanta jugar contigo! ✨",
+                      "Eres una persona muy especial. 💖",
+                      "¡Qué alegría verte de nuevo! 🌈",
+                      "¿Hacemos algo mágico hoy? 🪄",
+                      "Tu corazón brilla mucho. 🌟"
+                    ];
+                    const random = phrases[Math.floor(Math.random() * phrases.length)];
+                    setMascotMessage(random);
+                    handleSpeak(random);
+                    playSound('magic');
+                  }}
+                />
 
-              {/* Margareth Run Direct Access */}
+                {/* Personalize Button - Floating over Mascot */}
+                <motion.button
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => setView('customizer')}
+                  className="absolute bottom-0 right-0 bg-white shadow-xl p-3 rounded-2xl border-2 border-indigo-50 text-indigo-600 hover:text-indigo-800 transition-colors z-20"
+                  title="Personalizar a Margareth"
+                >
+                  <Palette size={24} />
+                </motion.button>
+              </div>
+
+              {/* Redesigned Elegant Margareth Run Banner */}
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => { playSound('click'); setView('games'); setActiveGame('run'); }}
-                className="w-full relative overflow-hidden bg-gradient-to-br from-green-400 to-emerald-600 p-8 rounded-[3rem] shadow-2xl flex items-center justify-between text-white group"
+                className="w-full relative overflow-hidden bg-white/40 backdrop-blur-xl p-8 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white/60 flex items-center justify-between text-indigo-950 group"
               >
-                <div className="flex flex-col items-start gap-2 z-10 text-left">
-                  <div className="bg-white/20 px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest flex items-center gap-2">
-                    <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
-                    ¡Nuevo Juego!
+                {/* Decorative background elements */}
+                <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute -right-20 -top-20 w-64 h-64 bg-indigo-200/20 rounded-full blur-3xl group-hover:bg-indigo-300/30 transition-colors" />
+
+                <div className="flex flex-col items-start gap-3 z-10 text-left">
+                  <div className="bg-indigo-600/10 text-indigo-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2 border border-indigo-600/20">
+                    <Sparkles size={12} className="animate-spin-slow" />
+                    Experiencia Premium
                   </div>
-                  <h3 className="text-4xl font-black font-hand">Margareth Run</h3>
-                  <p className="text-emerald-50 font-bold max-w-[200px]">¿Cuánto puedes correr sin chocar?</p>
+                  <h3 className="text-4xl font-black font-hand tracking-tight">Margareth Run</h3>
+                  <p className="text-slate-500 font-medium">Una aventura elegante y divertida</p>
                 </div>
-                <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-20 group-hover:opacity-40 transition-opacity">
-                  <Gamepad2 size={160} className="translate-x-10 translate-y-10 -rotate-12" />
-                </div>
-                <div className="z-10 bg-white text-emerald-600 px-8 py-4 rounded-full font-black text-xl shadow-lg border-4 border-emerald-100 flex items-center gap-2">
+
+                <div className="z-10 bg-indigo-900 text-white px-10 py-5 rounded-full font-black text-xl shadow-2xl shadow-indigo-200 group-hover:bg-indigo-950 transition-all flex items-center gap-3 border-b-4 border-indigo-950 active:border-b-0 active:translate-y-1">
                   <Zap size={24} className="text-yellow-400 fill-yellow-400" />
-                  Jugar Ahora
+                  JUGAR AHORA
                 </div>
               </motion.button>
 
@@ -599,9 +625,25 @@ export default function App() {
                   {activeGame === 'secret' && <SecretBox onComplete={() => handleGameComplete('secret')} />}
                   {activeGame === 'mirror' && <MagicMirror emotionColor="#FFD700" onComplete={() => handleGameComplete('mirror')} />}
                   {activeGame === 'conflict' && <ConflictGame onSpeak={handleSpeak} onComplete={() => handleGameComplete('conflict')} />}
-                  {activeGame === 'run' && <MascotRun />}
+                  {activeGame === 'run' && <MascotRun customization={customization} />}
                 </div>
               )}
+            </motion.div>
+          )}
+
+          {view === 'customizer' && (
+            <motion.div
+              key="customizer"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="w-full h-full"
+            >
+              <MascotCustomizer
+                customization={customization}
+                onUpdate={setCustomization}
+                onClose={() => setView('home')}
+              />
             </motion.div>
           )}
 
@@ -753,7 +795,7 @@ export default function App() {
                 <div className="w-4 h-4 bg-red-500 rounded-full animate-pulse" />
                 <h2 className="text-2xl font-black text-indigo-900 font-hand">¡Oh! Se fue el internet... ¡Pero Margareth sigue aquí!</h2>
               </motion.div>
-              <MascotRun />
+              <MascotRun customization={customization} />
               <p className="text-white/60 font-bold">Volverás automáticamente cuando regrese la conexión</p>
             </div>
           </motion.div>
